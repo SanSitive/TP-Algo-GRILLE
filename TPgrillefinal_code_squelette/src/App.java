@@ -76,9 +76,12 @@ class App {
 
         Solution s1 = new Solution();
         s1.add(sp1);
+        s1.add(new Coord(2,1));
+        s1.add(new Coord(2,2));
         s1.add(new Coord(2,3));
         s1.add(new Coord(2,4));
         s1.add(new Coord(1,4));
+        s1.add(new Coord(0,4));
         System.out.println("\n\n\nafficahge de la solution s1 :\n" + in1.toString(s1));
 
         Solution sg1 = Algos.greedySolver(in1);

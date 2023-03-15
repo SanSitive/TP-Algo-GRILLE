@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="squelette_code_TPgrille">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/src/squelette_code_TPgrille.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

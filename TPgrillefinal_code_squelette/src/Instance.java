@@ -204,7 +204,23 @@ public class Instance {
         //retourne vrai ssi s est une solution valide (une solution est valide ssi c'est une liste de coordonnées de taille au plus k+1, telle que deux coordonnées consécutives sont à distance 1,
         // et les coordonnées ne sortent pas du plateau)
 
-        //à compléter
+        if(s == null || s.size() > this.getK() + 1){
+            return false;
+        }else{
+            Coord temp = null;
+            for(Coord c : s){
+                //Vérification si possède une valeur et ne sort pas de la grille
+                if(c == null || c.getL() >= this.getNbL() || c.getL() < 0 || c.getC() >= this.getNbC() || c.getC() < 0){
+                    return false;
+                }
+                if(temp != null){
+                   if(!(c.estADistanceUn(temp))){
+                       return false;
+                   }
+                }
+                temp = c;
+            }
+        }
         return true;
     }
 
@@ -213,9 +229,16 @@ public class Instance {
         //prerequis : s est valide (et donc !=null)
         //action : retourne le nombre de pièces ramassées par s (et ne doit pas modifier this ni s)
 
-        //à compléter
+        int nbPiece = 0;
+        for(int l = 0; l < this.getNbL() ; l++){
+            for(int c =0 ; c < this.getNbC(); c++){
+                if (s.contains(new Coord(l, c)) && piecePresente(new Coord(l, c))) {
+                    nbPiece++;
+                }
+            }
+        }
 
-        return 0;
+        return nbPiece;
     }
 
 
@@ -256,9 +279,40 @@ public class Instance {
         //avec la pièce 0 en haut à droite, la pièce 1 en bas à gauche, et la pièce 2 en bas à droite,
         //on doit retourner (0,2,1)
 
-        //a compléter
+        ArrayList<Integer> listIndexPiece = new ArrayList<>();
 
-        return null;
+        Coord actualCoord = startingP;
+        Integer tempIndex = 0;
+
+        for(int nbPiece = 0; nbPiece < listeCoordPieces.size(); nbPiece++){
+            tempIndex = calcGreedy(actualCoord,listIndexPiece);
+            actualCoord = listeCoordPieces.get(tempIndex);
+            listIndexPiece.add(tempIndex);
+        }
+        System.out.println(listIndexPiece);
+        return listIndexPiece;
+    }
+
+    public Integer calcGreedy(Coord coordActu, ArrayList<Integer> listIndexPiece){
+
+        int minDist = Integer.MAX_VALUE;
+
+        for(int i =0; i< listeCoordPieces.size(); i++){
+            if(!listIndexPiece.contains(i)){
+                minDist = listeCoordPieces.get(i).distanceFrom(coordActu);
+            }
+        }
+
+
+
+        for(int index = 0; index < listeCoordPieces.size(); index++){
+            if(!listIndexPiece.contains(index)){
+                if(listeCoordPieces.get(index).distanceFrom(coordActu) < minDist){
+                    minDist = listeCoordPieces.get(index).distanceFrom(coordActu);
+                }
+            }
+        }
+        return minDist;
     }
 
 
