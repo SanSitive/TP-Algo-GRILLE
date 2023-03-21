@@ -197,7 +197,15 @@ public class Instance {
      **** méthodes à fournir relatives à une solution **
      *************************************************/
 
+    //FONCTION SUPPLEMENTAIRE RAJOUTER PAR NOUS (LES ETUDIANTS)
+    public boolean positionIsValide(Coord c){
 
+        if(c == null || c.getL() >= this.getNbL() || c.getL() < 0 || c.getC() >= this.getNbC() || c.getC() < 0){
+            return false;
+        }else{
+            return true;
+        }
+    }
 
     public boolean estValide(Solution s) {
         //prérequis : s!=null, et les s.get(i) !=null pour tout i (mais par contre s peut contenir n'importe quelle séquence de coordonnées)
