@@ -296,23 +296,17 @@ public class Instance {
     public Integer calcGreedy(Coord coordActu, ArrayList<Integer> listIndexPiece){
 
         int minDist = Integer.MAX_VALUE;
-
-        for(int i =0; i< listeCoordPieces.size(); i++){
-            if(!listIndexPiece.contains(i)){
-                minDist = listeCoordPieces.get(i).distanceFrom(coordActu);
-            }
-        }
-
-
+        int minIndex = 0;
 
         for(int index = 0; index < listeCoordPieces.size(); index++){
             if(!listIndexPiece.contains(index)){
                 if(listeCoordPieces.get(index).distanceFrom(coordActu) < minDist){
                     minDist = listeCoordPieces.get(index).distanceFrom(coordActu);
+                    minIndex = index;
                 }
             }
         }
-        return minDist;
+        return minIndex;
     }
 
 
@@ -336,7 +330,29 @@ public class Instance {
 
         //a compléter
 
-        return null;
+        int nbPas = this.getK();
+        Coord actualPosition = this.getStartingP();
+        Solution path = new Solution(this.getStartingP());
+        int indexPiece = 0;
+        while(nbPas > 0){
+            if(actualPosition.getL() < listeCoordPieces.get(permut.get(indexPiece)).getL()){
+                actualPosition = new Coord(actualPosition.getL()+1, actualPosition.getC());
+            }else if(actualPosition.getL() > listeCoordPieces.get(permut.get(indexPiece)).getL()){
+                actualPosition = new Coord(actualPosition.getL()-1, actualPosition.getC());
+            }else if(actualPosition.getC() < listeCoordPieces.get(permut.get(indexPiece)).getC()){
+                actualPosition = new Coord(actualPosition.getL(), actualPosition.getC()+1);
+            }else if(actualPosition.getC() > listeCoordPieces.get(permut.get(indexPiece)).getC()){
+                actualPosition = new Coord(actualPosition.getL(), actualPosition.getC()-1);
+            }
+            if(actualPosition.equals(listeCoordPieces.get(permut.get(indexPiece)))){
+                this.retirerPiece(actualPosition);
+            }
+            nbPas -= 1;
+            path.add(actualPosition);
+        }
+
+
+        return path;
     }
 
 
