@@ -63,7 +63,6 @@ public class Algos {
         }else{
             //si l'on a utilisé tous nos pas et que l'on a donc pas de solution
             if(id.i.getK() == 0 && seuil != 0){
-
                 return null;
             }else{
 

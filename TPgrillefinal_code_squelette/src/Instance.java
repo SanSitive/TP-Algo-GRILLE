@@ -384,28 +384,73 @@ public class Instance {
         int nbPiece = this.listeCoordPieces.size();
 
         ArrayList<Integer> listDistances = new ArrayList<>();
+        ArrayList<Integer> listDistancesAPremierePiece = new ArrayList<>();
 
-        ArrayList<ArrayList<Coord>> listCoordPres = new ArrayList<>();
+        ArrayList<ArrayList<Coord>> listCoordPres = new ArrayList<>(); //ça devrait être une liste (pour chaque piece) de liste pour chaque tuple
+        //DONC liste de liste de liste (car le dernier liste correspond aux tuples de coordonnées)
 
+        //ArrayList<Tuple> // à utiliser à la place
 
         for (int p = 0 ; p < nbPiece; p ++){
 
-            listDistances.add(this.startingP.distanceFrom(this.listeCoordPieces.get(p)));
+            listDistancesAPremierePiece.add(this.startingP.distanceFrom(this.listeCoordPieces.get(p)));
+
 
             ArrayList<Coord> coordTemp = new ArrayList<>();
+            /*
             coordTemp.add(this.startingP);
             coordTemp.add(this.listeCoordPieces.get(p));
-
+            //Pas besoin car on va jamais itérer vérifier plusieurs fois la dist startingP-Piece
+            */
             listCoordPres.add(coordTemp);
 
+            Coord pieceCoord = this.listeCoordPieces.get(p);
             // double for
             // Vérifier si présent dans listCoordPres si non, ajouter la distance dans listDistance
+            for (int p2 =0; p< nbPiece; p2++){
+                Coord pieceProche = this.listeCoordPieces.get(p2);
+                System.out.println("here");
+                //On check dans la liste de liste si la coordonnée n'existe pas déjà
+                if(!listCoordPres.get(p).isEmpty()){
 
+                    for(ArrayList<Coord> coords : listCoordPres){
 
+                        Coord coord1 = coords.get(0);
+                        Coord coord2 = coords.get(1);
+                        System.out.println(coord1);
+                        System.out.println(coord2);
+
+                        if(!(coord1.equals(pieceCoord) && coord2.equals(pieceProche) || coord1.equals(pieceProche) && coord2.equals(pieceCoord))){
+                            listDistances.add(pieceCoord.distanceFrom(pieceProche));
+
+                            ArrayList<Coord> tupleTemporaire = new ArrayList<>();
+                            coordTemp.add(pieceProche);
+                            coordTemp.add(pieceCoord);
+
+                            listCoordPres.add(coordTemp);
+                        }
+                    }
+                }
+            }
         }
 
+        Collections.sort(listDistances);
+        Collections.sort(listDistancesAPremierePiece);
+
+
         int max = 0;
+        int pas = this.getK() - listDistancesAPremierePiece.get(0);
+        int index = 0;
+        while(pas > 0){
+            max++;
+            pas = pas - listDistances.get(index);
+            index++;
+        }
+
         return max;
+
+
+
         /*
         for (int p = 0 ; p < nbPiece; p ++){
 
