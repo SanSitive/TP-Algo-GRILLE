@@ -1,4 +1,3 @@
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Objects;
@@ -25,6 +24,39 @@ public class Instance {
     //....3
     //et donc listeCoordPices.get(0) est la Coord (0,1)
 
+
+
+    public class TupleCoord {
+
+        Coord c1;
+        Coord c2;
+
+        public TupleCoord(Coord c1, Coord c2) {
+            this.c1 = c1;
+            this.c2 = c2;
+        }
+
+        public Coord getC1() {
+            return c1;
+        }
+
+        public void setC1(Coord c1) {
+            this.c1 = c1;
+        }
+
+        public Coord getC2() {
+            return c2;
+        }
+
+        public void setC2(Coord c2) {
+            this.c2 = c2;
+        }
+
+        @Override
+        public String toString(){
+            return "[ "+this.c1+", "+this.c2+" ]";
+        }
+    }
 
 
     /************************************************
@@ -384,52 +416,44 @@ public class Instance {
         int nbPiece = this.listeCoordPieces.size();
 
         ArrayList<Integer> listDistances = new ArrayList<>();
-        ArrayList<Integer> listDistancesAPremierePiece = new ArrayList<>();
-
-        ArrayList<ArrayList<Coord>> listCoordPres = new ArrayList<>(); //ça devrait être une liste (pour chaque piece) de liste pour chaque tuple
-        //DONC liste de liste de liste (car le dernier liste correspond aux tuples de coordonnées)
-
-        //ArrayList<Tuple> // à utiliser à la place
+        ArrayList<Integer> listDistancesAPremierePiece = new ArrayList<>(); // Trouver la pièce la plus proche de startingP
+        ArrayList<TupleCoord> listCoordPres = new ArrayList<>(); // Liste des coordonnées des pièces déjà calculé
 
         for (int p = 0 ; p < nbPiece; p ++){
 
             listDistancesAPremierePiece.add(this.startingP.distanceFrom(this.listeCoordPieces.get(p)));
 
-
-            ArrayList<Coord> coordTemp = new ArrayList<>();
-            /*
-            coordTemp.add(this.startingP);
-            coordTemp.add(this.listeCoordPieces.get(p));
-            //Pas besoin car on va jamais itérer vérifier plusieurs fois la dist startingP-Piece
-            */
-            listCoordPres.add(coordTemp);
-
             Coord pieceCoord = this.listeCoordPieces.get(p);
-            // double for
+
             // Vérifier si présent dans listCoordPres si non, ajouter la distance dans listDistance
-            for (int p2 =0; p< nbPiece; p2++){
+            for (int p2 = 0; p2 < nbPiece; p2 ++){
                 Coord pieceProche = this.listeCoordPieces.get(p2);
-                System.out.println("here");
-                //On check dans la liste de liste si la coordonnée n'existe pas déjà
-                if(!listCoordPres.get(p).isEmpty()){
+                // Vérifier que les deux pièces ne sont pas les mêmes
+                if (!pieceCoord.equals(pieceProche)){
 
-                    for(ArrayList<Coord> coords : listCoordPres){
-
-                        Coord coord1 = coords.get(0);
-                        Coord coord2 = coords.get(1);
-                        System.out.println(coord1);
-                        System.out.println(coord2);
-
-                        if(!(coord1.equals(pieceCoord) && coord2.equals(pieceProche) || coord1.equals(pieceProche) && coord2.equals(pieceCoord))){
+                    // On vérifie que la liste n'est pas encore vide
+                    if(!listCoordPres.isEmpty()){
+                        //On check dans la liste si la coordonnée n'existe pas déjà
+                        int verif = 0;
+                        for(TupleCoord tuple : listCoordPres){
+                            // Si elle n'y est pas l'ajouter
+                            if(!((tuple.getC1().equals(pieceCoord) && tuple.getC2().equals(pieceProche)) || (tuple.getC1().equals(pieceProche) && tuple.getC2().equals(pieceCoord)))){
+                                verif ++;
+                            }
+                        }
+                        if (verif == listCoordPres.size()){
                             listDistances.add(pieceCoord.distanceFrom(pieceProche));
-
-                            ArrayList<Coord> tupleTemporaire = new ArrayList<>();
-                            coordTemp.add(pieceProche);
-                            coordTemp.add(pieceCoord);
-
-                            listCoordPres.add(coordTemp);
+                            TupleCoord tuple = new TupleCoord(pieceCoord,pieceProche);
+                            listCoordPres.add(tuple);
                         }
                     }
+                    // Pour le premier passage de la boucle entre les pièces de la première position, il faut ajouter le premier tuple
+                    else {
+                        listDistances.add(pieceCoord.distanceFrom(pieceProche));
+                        TupleCoord firstTuple = new TupleCoord(pieceCoord,pieceProche);
+                        listCoordPres.add(firstTuple);
+                    }
+
                 }
             }
         }
@@ -437,55 +461,16 @@ public class Instance {
         Collections.sort(listDistances);
         Collections.sort(listDistancesAPremierePiece);
 
-
         int max = 0;
         int pas = this.getK() - listDistancesAPremierePiece.get(0);
         int index = 0;
-        while(pas > 0){
+        while(pas >= 0 && index < listDistances.size()){
             max++;
             pas = pas - listDistances.get(index);
             index++;
         }
 
         return max;
-
-
-
-        /*
-        for (int p = 0 ; p < nbPiece; p ++){
-
-            listDistanceOfEachPieces.add(new ArrayList<Integer>());
-
-            for (Coord p2 : this.listeCoordPieces){
-                if (!this.listeCoordPieces.get(p).equals(p2)){
-                    listDistanceOfEachPieces.get(p).add(this.listeCoordPieces.get(p).distanceFrom(p2));
-                }
-            }
-            Collections.sort(listDistanceOfEachPieces.get(p));
-        }
-
-        int max = 0;
-        int pas = 0;
-        int j = 0;
-        int maxTemp = 0;
-
-        for (int i = 0; i < listDistanceOfEachPieces.size(); i++){
-
-            maxTemp = 0;
-            pas = this.k - this.startingP.distanceFrom(listeCoordPieces.get(i));
-            j = 0;
-
-            while (pas > 0 && j <= listDistanceOfEachPieces.get(i).size()){
-                maxTemp = maxTemp+1;
-                pas = pas - listDistanceOfEachPieces.get(i).get(j);
-                j++;
-            }
-
-            max = Math.max(maxTemp, max);
-
-        }
-
-        return max;
-        */
     }
+
 }
