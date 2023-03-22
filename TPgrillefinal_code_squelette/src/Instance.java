@@ -399,6 +399,9 @@ public class Instance {
             listCoordPres.add(coordTemp);
 
             // double for
+            // Vérifier si présent dans listCoordPres si non, ajouter la distance dans listDistance
+
+
         }
 
         int max = 0;
