@@ -1,3 +1,4 @@
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Objects;
@@ -297,7 +298,6 @@ public class Instance {
             actualCoord = listeCoordPieces.get(tempIndex);
             listIndexPiece.add(tempIndex);
         }
-        System.out.println(listIndexPiece);
         return listIndexPiece;
     }
 
@@ -381,9 +381,63 @@ public class Instance {
         //(vous pouvez réfléchir au fait que c'est bien une borne supérieure)
         //(pour des exemples précis, cf les tests)
 
-        //à compléter
+        int nbPiece = this.listeCoordPieces.size();
+
+        ArrayList<Integer> listDistances = new ArrayList<>();
+
+        ArrayList<ArrayList<Coord>> listCoordPres = new ArrayList<>();
 
 
-        return 0;
+        for (int p = 0 ; p < nbPiece; p ++){
+
+            listDistances.add(this.startingP.distanceFrom(this.listeCoordPieces.get(p)));
+
+            ArrayList<Coord> coordTemp = new ArrayList<>();
+            coordTemp.add(this.startingP);
+            coordTemp.add(this.listeCoordPieces.get(p));
+
+            listCoordPres.add(coordTemp);
+
+            // double for
+        }
+
+        int max = 0;
+        return max;
+        /*
+        for (int p = 0 ; p < nbPiece; p ++){
+
+            listDistanceOfEachPieces.add(new ArrayList<Integer>());
+
+            for (Coord p2 : this.listeCoordPieces){
+                if (!this.listeCoordPieces.get(p).equals(p2)){
+                    listDistanceOfEachPieces.get(p).add(this.listeCoordPieces.get(p).distanceFrom(p2));
+                }
+            }
+            Collections.sort(listDistanceOfEachPieces.get(p));
+        }
+
+        int max = 0;
+        int pas = 0;
+        int j = 0;
+        int maxTemp = 0;
+
+        for (int i = 0; i < listDistanceOfEachPieces.size(); i++){
+
+            maxTemp = 0;
+            pas = this.k - this.startingP.distanceFrom(listeCoordPieces.get(i));
+            j = 0;
+
+            while (pas > 0 && j <= listDistanceOfEachPieces.get(i).size()){
+                maxTemp = maxTemp+1;
+                pas = pas - listDistanceOfEachPieces.get(i).get(j);
+                j++;
+            }
+
+            max = Math.max(maxTemp, max);
+
+        }
+
+        return max;
+        */
     }
 }
