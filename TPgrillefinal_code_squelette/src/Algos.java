@@ -33,11 +33,11 @@ public class Algos {
         if(id.c == 0){
             return new Solution(id.i.getStartingP());
         }else{
-            System.out.println(id.i);
+
             Solution s = new Solution(id.i.getStartingP());
             res = algoFPT4CheminsAux(id,s);
         }
-        System.out.println(res);
+
         return res;
     }
 
@@ -51,21 +51,22 @@ public class Algos {
         Solution pGauche = null;
         Solution pDroite = null;
 
+
+        if(id.i.piecePresente(id.i.getStartingP())){
+            id.i.retirerPiece(id.i.getStartingP());
+            seuil -= 1;
+        }
+
         //Si l'on a trouvé une solution
         if(seuil == 0){
-            System.out.println("on a un chemin");
             return s;
         }else{
             //si l'on a utilisé tous nos pas et que l'on a donc pas de solution
             if(id.i.getK() == 0 && seuil != 0){
-                System.out.println("k == 0");
+
                 return null;
             }else{
-                if(id.i.piecePresente(id.i.getStartingP())){
-                    System.out.println("on prend une piece");
-                    id.i.retirerPiece(id.i.getStartingP());
-                    seuil -= 1;
-                }
+
                 //On fait un pas donc un decrease le k
                 id.i.setK(id.i.getK()-1);
 
@@ -73,7 +74,7 @@ public class Algos {
                 //Et on compare les résultats (null ou un chemin existe)
 
                 if(id.i.positionIsValide(new Coord(actualP.getL()-1, actualP.getC()))){ //HAUT
-                    System.out.println("h");
+
                     id.i.setStartingP(new Coord(actualP.getL()-1, actualP.getC())); //On déplace le startingPoint à la nouvelle position
                     InstanceDec haut = new InstanceDec(new Instance(id.i),seuil); //On crée la nouvelle instance utilisé
                     Solution sHaut = new Solution(); //On crée la nouvelle solution en copiant l'ancienne + rajout de la nouvelle position
@@ -85,7 +86,7 @@ public class Algos {
 
                 }
                 if(id.i.positionIsValide(new Coord(actualP.getL()+1, actualP.getC()))){ //BAS
-                    System.out.println("b");
+
                     id.i.setStartingP(new Coord(actualP.getL()+1, actualP.getC()));
                     InstanceDec bas = new InstanceDec(new Instance(id.i),seuil);
                     Solution sBas = new Solution(); //On crée la nouvelle solution en copiant l'ancienne + rajout de la nouvelle position
@@ -97,7 +98,7 @@ public class Algos {
 
                 }
                 if(id.i.positionIsValide(new Coord(actualP.getL(), actualP.getC()-1))){ //GAUCHE
-                    System.out.println("g");
+
                     id.i.setStartingP(new Coord(actualP.getL(), actualP.getC()-1));
                     InstanceDec gauche = new InstanceDec(new Instance(id.i),seuil);
                     Solution sGauche = new Solution(); //On crée la nouvelle solution en copiant l'ancienne + rajout de la nouvelle position
@@ -109,7 +110,7 @@ public class Algos {
 
                 }
                 if (id.i.positionIsValide(new Coord(actualP.getL(), actualP.getC()+1))){ //DROITE
-                    System.out.println("d");
+
                     id.i.setStartingP(new Coord(actualP.getL(), actualP.getC()+1));
                     InstanceDec droite = new InstanceDec(new Instance(id.i),seuil);
                     Solution sDroite = new Solution(); //On crée la nouvelle solution en copiant l'ancienne + rajout de la nouvelle position
