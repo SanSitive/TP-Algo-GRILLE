@@ -27,8 +27,6 @@ public class Algos {
         // (on peut aussi retourner une solution plus longue si on veut)
         //Remarque : quand vous aurez codé la borneSup, pensez à l'utiliser dans cet algorithme pour ajouter un cas de base
 
-        //à compléter
-
         Solution res = null;
         if(id.c == 0){
             return new Solution(id.i.getStartingP());
@@ -145,10 +143,147 @@ public class Algos {
         //Remarques
         // - ne doit pas modifier l'instance id en param (mais va modifier la table bien sûr)
         // - même si le branchement est le même que dans algoFPT1, ne faites PAS appel à algoFPT1 (et donc il y aura de la duplication de code)
+        Solution s = null;
+
+        if(table.containsKey(id)){
+            s = table.get(id);
+        }else{
+            s = table.put(id,algoFPT1DPAux(id,table));
+        }
+
+        return s;
+    }
+
+    public static Solution algoFPT1DPAux(InstanceDec id,  HashMap<InstanceDec,Solution> table){
+        Solution res = null;
+        if(id.c == 0){
+            return new Solution(id.i.getStartingP());
+        }else{
+            Solution s = new Solution(id.i.getStartingP());
+            res = algoFPT1DPAux4Chemins(id,table,s);
+        }
+
+        return res;
+    }
+
+    public static Solution algoFPT1DPAux4Chemins(InstanceDec id,  HashMap<InstanceDec,Solution> table, Solution s){
+        Coord actualP = id.i.getStartingP();
+        int seuil = id.c;
+
+        Solution pHaut = null;
+        Solution pBas = null;
+        Solution pGauche = null;
+        Solution pDroite = null;
 
 
-        //à compléter
-        return null;
+        if(id.i.piecePresente(id.i.getStartingP())){
+            id.i.retirerPiece(id.i.getStartingP());
+            seuil -= 1;
+        }
+
+        //Si l'on a trouvé une solution
+        if(seuil == 0){
+            return s;
+        }else{
+            //si l'on a utilisé tous nos pas et que l'on a donc pas de solution
+            if(id.i.getK() == 0 && seuil != 0){
+                return null;
+            }else{
+
+                //On fait un pas donc un decrease le k
+                id.i.setK(id.i.getK()-1);
+
+                //On va dans les 4 directions possibles (si l'on peut vis a vis de la grille)
+                //Et on compare les résultats (null ou un chemin existe)
+
+                if(id.i.positionIsValide(new Coord(actualP.getL()-1, actualP.getC()))){ //HAUT
+
+                    id.i.setStartingP(new Coord(actualP.getL()-1, actualP.getC())); //On déplace le startingPoint à la nouvelle position
+                    InstanceDec haut = new InstanceDec(new Instance(id.i),seuil); //On crée la nouvelle instance utilisé
+
+                    if(table.containsKey(haut)){
+                        pHaut = table.get(haut);
+                    }else{
+                        Solution sHaut = new Solution(); //On crée la nouvelle solution en copiant l'ancienne + rajout de la nouvelle position
+                        for(Coord c : s){
+                            sHaut.add(c);
+                        }
+                        sHaut.add(id.i.getStartingP());
+                        pHaut = algoFPT4CheminsAux(haut,sHaut);
+                        table.put(haut,pHaut);
+                    }
+
+
+                }
+                if(id.i.positionIsValide(new Coord(actualP.getL()+1, actualP.getC()))){ //BAS
+
+                    id.i.setStartingP(new Coord(actualP.getL()+1, actualP.getC()));
+                    InstanceDec bas = new InstanceDec(new Instance(id.i),seuil);
+
+                    if(table.containsKey(bas)){
+                        pBas = table.get(bas);
+                    }else{
+                        Solution sBas = new Solution(); //On crée la nouvelle solution en copiant l'ancienne + rajout de la nouvelle position
+                        for(Coord c : s){
+                            sBas.add(c);
+                        }
+                        sBas.add(id.i.getStartingP());
+                        pBas = algoFPT4CheminsAux(bas,sBas);
+                        table.put(bas,pBas);
+                    }
+
+
+                }
+                if(id.i.positionIsValide(new Coord(actualP.getL(), actualP.getC()-1))){ //GAUCHE
+                    id.i.setStartingP(new Coord(actualP.getL(), actualP.getC()-1));
+                    InstanceDec gauche = new InstanceDec(new Instance(id.i),seuil);
+
+                    if(table.containsKey(gauche)){
+                        pGauche = table.get(gauche);
+                    }else{
+                        Solution sGauche = new Solution(); //On crée la nouvelle solution en copiant l'ancienne + rajout de la nouvelle position
+                        for(Coord c : s){
+                            sGauche.add(c);
+                        }
+                        sGauche.add(id.i.getStartingP());
+                        pGauche = algoFPT4CheminsAux(gauche,sGauche);
+                        table.put(gauche,pGauche);
+                    }
+
+
+                }
+                if (id.i.positionIsValide(new Coord(actualP.getL(), actualP.getC()+1))){ //DROITE
+
+                    id.i.setStartingP(new Coord(actualP.getL(), actualP.getC()+1));
+                    InstanceDec droite = new InstanceDec(new Instance(id.i),seuil);
+
+                    if(table.containsKey(droite)){
+                        pDroite = table.get(droite);
+
+                    }else{
+                        Solution sDroite = new Solution(); //On crée la nouvelle solution en copiant l'ancienne + rajout de la nouvelle position
+                        for(Coord c : s){
+                            sDroite.add(c);
+                        }
+                        sDroite.add(id.i.getStartingP());
+                        pDroite = algoFPT4CheminsAux(droite,sDroite);
+                        table.put(droite,pDroite);
+                    }
+
+                }
+            }
+        }
+
+        if(pHaut != null){
+            return pHaut;
+        }else if(pBas != null){
+            return pBas;
+        }else if(pGauche != null){
+            return pGauche;
+        }else{
+            return pDroite;
+        }
+
     }
 
 
@@ -157,8 +292,15 @@ public class Algos {
         //doit faire appel à algoFPT1DP
 
         //à completer
-        return null;
+        Solution s = null;
+        if(id.i.getListeCoordPieces().size() < id.c ){
+            s = null;
+        }else{
+            HashMap<InstanceDec, Solution> table = new HashMap<>();
+            s = algoFPT1DP(id,table);
+        }
 
+        return s;
     }
 
 
