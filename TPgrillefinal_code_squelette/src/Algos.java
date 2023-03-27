@@ -58,64 +58,66 @@ public class Algos {
         //Si l'on a trouvé une solution
         if(seuil == 0){
             return s;
-        }else{
+        }else {
             //si l'on a utilisé tous nos pas et que l'on a donc pas de solution
-            if(id.i.getK() == 0 && seuil != 0){
+            if (id.i.getK() == 0 && seuil != 0) {
                 return null;
-            }else{
+            } else if (id.i.borneSup() < seuil) {
+                return null;
+            } else {
 
                 //On fait un pas donc un decrease le k
-                id.i.setK(id.i.getK()-1);
+                id.i.setK(id.i.getK() - 1);
 
                 //On va dans les 4 directions possibles (si l'on peut vis a vis de la grille)
                 //Et on compare les résultats (null ou un chemin existe)
 
-                if(id.i.positionIsValide(new Coord(actualP.getL()-1, actualP.getC()))){ //HAUT
+                if (id.i.positionIsValide(new Coord(actualP.getL() - 1, actualP.getC()))) { //HAUT
 
-                    id.i.setStartingP(new Coord(actualP.getL()-1, actualP.getC())); //On déplace le startingPoint à la nouvelle position
-                    InstanceDec haut = new InstanceDec(new Instance(id.i),seuil); //On crée la nouvelle instance utilisé
+                    id.i.setStartingP(new Coord(actualP.getL() - 1, actualP.getC())); //On déplace le startingPoint à la nouvelle position
+                    InstanceDec haut = new InstanceDec(new Instance(id.i), seuil); //On crée la nouvelle instance utilisé
                     Solution sHaut = new Solution(); //On crée la nouvelle solution en copiant l'ancienne + rajout de la nouvelle position
-                    for(Coord c : s){
+                    for (Coord c : s) {
                         sHaut.add(c);
                     }
                     sHaut.add(id.i.getStartingP());
-                    pHaut = algoFPT4CheminsAux(haut,sHaut);
+                    pHaut = algoFPT4CheminsAux(haut, sHaut);
 
                 }
-                if(id.i.positionIsValide(new Coord(actualP.getL()+1, actualP.getC()))){ //BAS
+                if (id.i.positionIsValide(new Coord(actualP.getL() + 1, actualP.getC()))) { //BAS
 
-                    id.i.setStartingP(new Coord(actualP.getL()+1, actualP.getC()));
-                    InstanceDec bas = new InstanceDec(new Instance(id.i),seuil);
+                    id.i.setStartingP(new Coord(actualP.getL() + 1, actualP.getC()));
+                    InstanceDec bas = new InstanceDec(new Instance(id.i), seuil);
                     Solution sBas = new Solution(); //On crée la nouvelle solution en copiant l'ancienne + rajout de la nouvelle position
-                    for(Coord c : s){
+                    for (Coord c : s) {
                         sBas.add(c);
                     }
                     sBas.add(id.i.getStartingP());
-                    pBas = algoFPT4CheminsAux(bas,sBas);
+                    pBas = algoFPT4CheminsAux(bas, sBas);
 
                 }
-                if(id.i.positionIsValide(new Coord(actualP.getL(), actualP.getC()-1))){ //GAUCHE
+                if (id.i.positionIsValide(new Coord(actualP.getL(), actualP.getC() - 1))) { //GAUCHE
 
-                    id.i.setStartingP(new Coord(actualP.getL(), actualP.getC()-1));
-                    InstanceDec gauche = new InstanceDec(new Instance(id.i),seuil);
+                    id.i.setStartingP(new Coord(actualP.getL(), actualP.getC() - 1));
+                    InstanceDec gauche = new InstanceDec(new Instance(id.i), seuil);
                     Solution sGauche = new Solution(); //On crée la nouvelle solution en copiant l'ancienne + rajout de la nouvelle position
-                    for(Coord c : s){
+                    for (Coord c : s) {
                         sGauche.add(c);
                     }
                     sGauche.add(id.i.getStartingP());
-                    pGauche = algoFPT4CheminsAux(gauche,sGauche);
+                    pGauche = algoFPT4CheminsAux(gauche, sGauche);
 
                 }
-                if (id.i.positionIsValide(new Coord(actualP.getL(), actualP.getC()+1))){ //DROITE
+                if (id.i.positionIsValide(new Coord(actualP.getL(), actualP.getC() + 1))) { //DROITE
 
-                    id.i.setStartingP(new Coord(actualP.getL(), actualP.getC()+1));
-                    InstanceDec droite = new InstanceDec(new Instance(id.i),seuil);
+                    id.i.setStartingP(new Coord(actualP.getL(), actualP.getC() + 1));
+                    InstanceDec droite = new InstanceDec(new Instance(id.i), seuil);
                     Solution sDroite = new Solution(); //On crée la nouvelle solution en copiant l'ancienne + rajout de la nouvelle position
-                    for(Coord c : s){
+                    for (Coord c : s) {
                         sDroite.add(c);
                     }
                     sDroite.add(id.i.getStartingP());
-                    pDroite = algoFPT4CheminsAux(droite,sDroite);
+                    pDroite = algoFPT4CheminsAux(droite, sDroite);
                 }
             }
         }

@@ -43,7 +43,13 @@ public class ElemPermutHC implements IElemHC {
         //- nbStepsTotal est le nombre de pas total qu'il faudrait pour ramasser toutes les pièces dans l'ordre de permut
 
         // à compléter
-     return 0;
+
+        int distMinPourRecupAllPiece = this.i.nbStepsToCollectAll(this.permut);
+
+        int valSol = this.i.evaluerSolution(this.getSol());
+        int nbCases = i.getNbL() * i.getNbC();
+        return nbCases * valSol - distMinPourRecupAllPiece;
+
     }
 
     public Solution getSol(){
@@ -62,8 +68,21 @@ public class ElemPermutHC implements IElemHC {
         //ne dois pas modifier this
 
         //à compléter
+        ArrayList<ElemPermutHC> toReturn = new ArrayList<>();
+        for(int i =0; i< this.permut.size(); i++){
+            ArrayList<Integer> newPermut = new ArrayList<>();
+            for(Integer j : this.permut){
+                newPermut.add(j);
+            }
+            Integer elem = this.permut.get(i);
+            newPermut.remove(this.permut.get(i));
+            newPermut.add(elem);
 
-        return null;
+            toReturn.add(new ElemPermutHC(this.i,newPermut));
+        }
+
+
+        return toReturn;
     }
 
 
@@ -74,7 +93,23 @@ public class ElemPermutHC implements IElemHC {
         //pour dist = 1, doit retourner getVoisinsImmediats();
 
         //à compléter
-      return null;
+        ArrayList<ElemPermutHC> toReturn = this.getVoisinsImmediats();
+
+        for(int i = 1; i < this.dist; i++){
+            for(ElemPermutHC elem : toReturn){
+                ArrayList<ElemPermutHC> procheVoisins = elem.getVoisinsImmediats();
+                for(ElemPermutHC elemPV : procheVoisins){
+                    if(!toReturn.contains(elemPV)){
+                        toReturn.add(elemPV);
+                    }
+                }
+            }
+        }
+
+
+
+
+      return toReturn;
     }
 
 }

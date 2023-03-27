@@ -9,7 +9,14 @@ class HillClimbing {
         //effectue nbRestart fois l'algorithme de hillClimbing, en partant à chaque fois d'un élément donné par f
 
         //à compléter
-        return null;
+        IElemHC iehc = hillClimbing(f.getRandomSol());
+        for(int i =0; i< nbRestart; i++){
+            IElemHC iehc2 = hillClimbing(f.getRandomSol());
+            if(iehc.getVal() < iehc2.getVal()){
+                iehc = iehc2;
+            }
+        }
+        return iehc.getSol();
     }
 
     public static IElemHC hillClimbing(IElemHC s){
@@ -21,6 +28,23 @@ class HillClimbing {
         // (meilleur au sens de getVal strictement plus grand)
 
         // à compléter
-       return null;
+
+        ElemPermutHC elem = (ElemPermutHC) s;
+        ArrayList<ElemPermutHC> voisins = elem.getVoisins();
+        int max = s.getVal();
+        IElemHC maxDesVoisins = s;
+
+        for(ElemPermutHC e : voisins){
+            if(e.getVal() > max){
+                max = e.getVal();
+                maxDesVoisins = e;
+            }
+        }
+
+        if(maxDesVoisins != null){
+            return maxDesVoisins;
+        }else{
+            return s;
+        }
     }
 }

@@ -62,7 +62,7 @@ class App {
          **** petite instance pour jouer ******
          *************************************************/
         //une instance ou greedy n'est pas optimal
-        boolean[][] p1 = {
+        /*boolean[][] p1 = {
                 {true, false, false, false, true},
                 {false, false, false, false, false},
                 {false, false, false, true, true},
@@ -90,7 +90,7 @@ class App {
         if(sfpt1 == null)
             System.out.println("valeur de fpt :  null");
         else
-            System.out.println("valeur de fpt : " + in1.evaluerSolution(sfpt1));
+            System.out.println("valeur de fpt : " + in1.evaluerSolution(sfpt1));*/
 
 
         /************************************************
@@ -134,7 +134,7 @@ class App {
         /************************************************
          **** comparaison des algos        ******
          *************************************************/
-        /*
+
         int sommeG = 0;
         int sommeL = 0;
         for(int i=0;i<20;i++){
@@ -144,6 +144,6 @@ class App {
             sommeL += inst.evaluerSolution(HillClimbing.hillClimbingWithRestart(facto,10));
         }
         System.out.println("somme G " + sommeG + " somme L " + sommeL);
-        */
+
     }
 }

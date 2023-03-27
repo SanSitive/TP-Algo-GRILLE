@@ -293,7 +293,22 @@ public class Instance {
 
         //à compléter
 
-        return 0;
+        int indexPremierePiece = permut.get(0);
+
+        ArrayList<Coord> listeP = getListeCoordPieces();
+
+        Coord start = getStartingP();
+
+        int distMinPourRecupAllPiece = start.distanceFrom(listeP.get(indexPremierePiece));
+
+        for(int j = 0; j < permut.size()-1; j++){
+            Coord actualPiece = listeP.get(permut.get(j));
+            Coord nextPiece = listeP.get(permut.get(j+1));
+            distMinPourRecupAllPiece += actualPiece.distanceFrom(nextPiece);
+
+        }
+
+        return distMinPourRecupAllPiece;
     }
 
     /************************************************
@@ -322,12 +337,12 @@ public class Instance {
 
         ArrayList<Integer> listIndexPiece = new ArrayList<>();
 
-        Coord actualCoord = startingP;
+        Coord actualCoord = this.startingP;
         Integer tempIndex = 0;
 
-        for(int nbPiece = 0; nbPiece < listeCoordPieces.size(); nbPiece++){
+        for(int nbPiece = 0; nbPiece < this.listeCoordPieces.size(); nbPiece++){
             tempIndex = calcGreedy(actualCoord,listIndexPiece);
-            actualCoord = listeCoordPieces.get(tempIndex);
+            actualCoord = this.listeCoordPieces.get(tempIndex);
             listIndexPiece.add(tempIndex);
         }
         return listIndexPiece;
@@ -369,29 +384,39 @@ public class Instance {
         // et on s'arrête avant d'avoir fait k pas car on a tout collecté)
 
         //a compléter
+        Instance i = new Instance(this);
 
-        int nbPas = this.getK();
-        Coord actualPosition = this.getStartingP();
-        Solution path = new Solution(this.getStartingP());
+        int nbPas = i.getK();
+        ArrayList<Coord> listeCoordsP = new ArrayList<>();
+        for(Coord c : i.getListeCoordPieces()){
+            listeCoordsP.add(c);
+        }
+        Coord actualPosition = i.getStartingP();
+        Solution path = new Solution(i.getStartingP());
         int indexPiece = 0;
-        while(nbPas > 0){
-            if(actualPosition.getL() < listeCoordPieces.get(permut.get(indexPiece)).getL()){
+        while(nbPas > 0 && indexPiece < permut.size()){
+            System.out.println("listeCoordsP.size = "+listeCoordsP.size() + " et permut.size="+permut.size() + "et indexpiece="+indexPiece);
+            if(actualPosition.getL() < listeCoordsP.get(permut.get(indexPiece)).getL()){
                 actualPosition = new Coord(actualPosition.getL()+1, actualPosition.getC());
-            }else if(actualPosition.getL() > listeCoordPieces.get(permut.get(indexPiece)).getL()){
+            }else if(actualPosition.getL() > listeCoordsP.get(permut.get(indexPiece)).getL()){
                 actualPosition = new Coord(actualPosition.getL()-1, actualPosition.getC());
-            }else if(actualPosition.getC() < listeCoordPieces.get(permut.get(indexPiece)).getC()){
+            }else if(actualPosition.getC() < listeCoordsP.get(permut.get(indexPiece)).getC()){
                 actualPosition = new Coord(actualPosition.getL(), actualPosition.getC()+1);
-            }else if(actualPosition.getC() > listeCoordPieces.get(permut.get(indexPiece)).getC()){
+            }else if(actualPosition.getC() > listeCoordsP.get(permut.get(indexPiece)).getC()){
                 actualPosition = new Coord(actualPosition.getL(), actualPosition.getC()-1);
             }
-            if(actualPosition.equals(listeCoordPieces.get(permut.get(indexPiece)))){
-                this.retirerPiece(actualPosition);
+            if(actualPosition.equals(listeCoordsP.get(permut.get(indexPiece)))){
+                i.retirerPiece(actualPosition);
+                indexPiece++;
+
+
             }
+
             nbPas -= 1;
             path.add(actualPosition);
         }
 
-
+        System.out.println("~~~~~~");
         return path;
     }
 
