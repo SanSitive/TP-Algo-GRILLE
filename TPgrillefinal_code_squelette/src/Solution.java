@@ -11,4 +11,9 @@ public class Solution extends ArrayList<Coord> {
     }
 
 
+    public Solution(Solution solution) {
+        for (Coord c: solution) {
+            add(c);
+        }
+    }
 }
